@@ -31,8 +31,8 @@ A machine learning project to predict house prices using Linear Regression and R
      - Applied Linear Regression
      - Applied Random Forest Regressoion
   3. Model Evaluation
-     -Evaluated using MAE, MSE, RMSE, and R² Score
-  4. Model Deployment
+     - Evaluated using MAE, MSE, RMSE, and R² Score
+  5. Model Deployment
      - Trained models were saved using joblib
      - A simple Flask web app was developed to interact with the model
 # 📈 Model Performance
