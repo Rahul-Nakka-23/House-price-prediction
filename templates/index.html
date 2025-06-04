@@ -4,72 +4,155 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hyderabad House Price Predictor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             max-width: 600px;
-            margin: 0 auto;
+            margin: 20px auto;
             padding: 20px;
-            background-color: #f5f5f5;
+            background-color: #e0f2f7; /* Light blue background */
+            color: #333;
+            line-height: 1.6;
         }
         .form-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            border: 1px solid #c8e6c9; /* Light green border */
+        }
+        h1 {
+            text-align: center;
+            color: #2e7d32; /* Dark green */
+            margin-bottom: 25px;
+            font-weight: 700;
         }
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #424242;
         }
         select, input[type="text"], input[type="number"] {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 12px;
+            border: 1px solid #a5d6a7; /* Greenish border */
+            border-radius: 6px;
             box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        select:focus, input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #388e3c; /* Darker green on focus */
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
         }
         .radio-group {
-            margin: 10px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 5px;
         }
         .radio-option {
-            margin-right: 15px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
+            background-color: #e8f5e9; /* Lighter green for radio options */
             padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        .radio-option:hover {
+            background-color: #dcedc8;
+        }
+        .radio-option input[type="radio"] {
+            margin-right: 8px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #66bb6a; /* Green border for custom radio */
+            border-radius: 50%;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+            display: grid;
+            place-content: center;
+        }
+        .radio-option input[type="radio"]::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: transform 0.2s ease-in-out;
+            background-color: #2e7d32; /* Dark green fill for custom radio */
+        }
+        .radio-option input[type="radio"]:checked::before {
+            transform: scale(1);
+        }
+
+        button {
+            background-color: #4CAF50; /* Primary green button */
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 500;
+            width: 100%;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 10px;
         }
         button:hover {
-            background-color: #45a049;
+            background-color: #388e3c; /* Darker green on hover */
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
         }
         .prediction {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #e8f5e9;
-            border-radius: 4px;
-            font-size: 18px;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f5e9; /* Light green background for prediction */
+            border-radius: 8px;
+            font-size: 20px;
+            text-align: center;
+            border: 1px solid #c8e6c9;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+        .prediction h3 {
+            margin-top: 0;
+            color: #1b5e20;
+            font-weight: 700;
         }
         .error {
-            color: red;
-            margin-bottom: 15px;
-            padding: 10px;
-            background-color: #ffebee;
-            border-radius: 4px;
+            color: #d32f2f; /* Red for errors */
+            background-color: #ffebee; /* Light red background for error */
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #ef9a9a;
+            font-weight: 500;
+        }
+        small {
+            color: #757575;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
         }
     </style>
 </head>
 <body>
     <div class="form-container">
-        <h1>House Price Predictor</h1>
+        <h1>Hyderabad House Price Predictor</h1>
         
         {% if error %}
         <div class="error">
@@ -82,16 +165,16 @@
                 <label for="title">Property Type:</label>
                 <div class="radio-group">
                     <label class="radio-option">
-                        <input type="radio" name="title" value="2 BHK Apartment" required> 2 BHK Apartment
+                        <input type="radio" name="title" value="2 BHK Apartment" required {% if request.form.title == '2 BHK Apartment' %}checked{% endif %}> 2 BHK Apartment
                     </label>
                     <label class="radio-option">
-                        <input type="radio" name="title" value="3 BHK Apartment"> 3 BHK Apartment
+                        <input type="radio" name="title" value="3 BHK Apartment" {% if request.form.title == '3 BHK Apartment' %}checked{% endif %}> 3 BHK Apartment
                     </label>
                     <label class="radio-option">
-                        <input type="radio" name="title" value="4 BHK Apartment"> 4 BHK Apartment
+                        <input type="radio" name="title" value="4 BHK Apartment" {% if request.form.title == '4 BHK Apartment' %}checked{% endif %}> 4 BHK Apartment
                     </label>
                     <label class="radio-option">
-                        <input type="radio" name="title" value="Residential Plot"> Residential Plot
+                        <input type="radio" name="title" value="Residential Plot" {% if request.form.title == 'Residential Plot' %}checked{% endif %}> Residential Plot
                     </label>
                 </div>
             </div>
@@ -100,16 +183,16 @@
                 <label for="location">Location:</label>
                 <select name="location" id="location" required>
                     <option value="">Select Location</option>
-                    <option value="Gachibowli">Gachibowli</option>
-                    <option value="Kondapur">Kondapur</option>
-                    <option value="Hitech City">Hitech City</option>
-                    <option value="Manikonda">Manikonda</option>
-                    <option value="Kukatpally">Kukatpally</option>
-                    <option value="Banjara Hills">Banjara Hills</option>
-                    <option value="Jubilee Hills">Jubilee Hills</option>
-                    <option value="Madhapur">Madhapur</option>
-                    <option value="Nizampet">Nizampet</option>
-                    <option value="Bachupally">Bachupally</option>
+                    <option value="Gachibowli" {% if request.form.location == 'Gachibowli' %}selected{% endif %}>Gachibowli</option>
+                    <option value="Kondapur" {% if request.form.location == 'Kondapur' %}selected{% endif %}>Kondapur</option>
+                    <option value="Hitech City" {% if request.form.location == 'Hitech City' %}selected{% endif %}>Hitech City</option>
+                    <option value="Manikonda" {% if request.form.location == 'Manikonda' %}selected{% endif %}>Manikonda</option>
+                    <option value="Kukatpally" {% if request.form.location == 'Kukatpally' %}selected{% endif %}>Kukatpally</option>
+                    <option value="Banjara Hills" {% if request.form.location == 'Banjara Hills' %}selected{% endif %}>Banjara Hills</option>
+                    <option value="Jubilee Hills" {% if request.form.location == 'Jubilee Hills' %}selected{% endif %}>Jubilee Hills</option>
+                    <option value="Madhapur" {% if request.form.location == 'Madhapur' %}selected{% endif %}>Madhapur</option>
+                    <option value="Nizampet" {% if request.form.location == 'Nizampet' %}selected{% endif %}>Nizampet</option>
+                    <option value="Bachupally" {% if request.form.location == 'Bachupally' %}selected{% endif %}>Bachupally</option>
                 </select>
             </div>
 
@@ -117,28 +200,28 @@
                 <label for="building_status">Building Status:</label>
                 <div class="radio-group">
                     <label class="radio-option">
-                        <input type="radio" name="building_status" value="Ready to move" required> Ready to move
+                        <input type="radio" name="building_status" value="Ready to move" required {% if request.form.building_status == 'Ready to move' %}checked{% endif %}> Ready to move
                     </label>
                     <label class="radio-option">
-                        <input type="radio" name="building_status" value="Under Construction"> Under Construction
+                        <input type="radio" name="building_status" value="Under Construction" {% if request.form.building_status == 'Under Construction' %}checked{% endif %}> Under Construction
                     </label>
                     <label class="radio-option">
-                        <input type="radio" name="building_status" value="New"> New
+                        <input type="radio" name="building_status" value="New" {% if request.form.building_status == 'New' %}checked{% endif %}> New
                     </label>
                     <label class="radio-option">
-                        <input type="radio" name="building_status" value="Resale"> Resale
+                        <input type="radio" name="building_status" value="Resale" {% if request.form.building_status == 'Resale' %}checked{% endif %}> Resale
                     </label>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="area">Area (sq.ft):</label>
-                <input type="number" id="area" name="area" min="500"  required>
+                <input type="number" id="area" name="area" min="500" value="{{ request.form.area }}" required>
             </div>
 
             <div class="form-group">
                 <label for="rate_persqft">Rate per sq.ft (optional):</label>
-                <input type="number" id="rate_persqft" name="rate_persqft" min="1000">
+                <input type="number" id="rate_persqft" name="rate_persqft" min="1000" value="{{ request.form.rate_persqft }}">
                 <small>Leave blank for average rate</small>
             </div>
 

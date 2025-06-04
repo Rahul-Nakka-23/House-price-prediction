@@ -28,38 +28,51 @@ def predict():
             error_msg = "Model not loaded. Please check server logs."
             print(error_msg)
             return render_template('index.html', 
-                                error=error_msg,
-                                show_prediction=False)
+                                   error=error_msg,
+                                   show_prediction=False)
         
         try:
-            # Get form data with debug prints
+            # Get form data
             title = request.form.get('title')
             location = request.form.get('location')
             building_status = request.form.get('building_status')
             area = request.form.get('area')
-            rate_persqft = request.form.get('rate_persqft', 6000)
-            
+            rate_input = request.form.get('rate_persqft')
+
             print(f"Input values - Title: {title}, Location: {location}, "
-                  f"Status: {building_status}, Area: {area}, Rate: {rate_persqft}")
+                  f"Status: {building_status}, Area: {area}, Rate Input: {rate_input}")
             
-            # Validate inputs
+            # Validate required inputs
             if not all([title, location, building_status, area]):
-                error_msg = "All fields are required"
+                error_msg = "All fields except rate per sq.ft are required"
                 print(error_msg)
                 return render_template('index.html', 
-                                    error=error_msg,
-                                    show_prediction=False)
+                                       error=error_msg,
+                                       show_prediction=False)
             
             try:
                 area = float(area)
-                rate_persqft = float(rate_persqft)
             except ValueError:
-                error_msg = "Area and Rate must be numbers"
+                error_msg = "Area must be a valid number"
                 print(error_msg)
                 return render_template('index.html', 
-                                    error=error_msg,
-                                    show_prediction=False)
+                                       error=error_msg,
+                                       show_prediction=False)
             
+            # Handle optional rate input
+            if rate_input:
+                try:
+                    rate_persqft = float(rate_input)
+                except ValueError:
+                    error_msg = "Rate per sq.ft must be a number if provided"
+                    print(error_msg)
+                    return render_template('index.html', 
+                                           error=error_msg,
+                                           show_prediction=False)
+            else:
+                rate_persqft = 6000  # Default average rate
+                print("Rate per sq.ft not provided. Using default:", rate_persqft)
+
             # Create input DataFrame
             input_data = pd.DataFrame({
                 'title': [title],
@@ -76,18 +89,18 @@ def predict():
             
             prediction = model.predict(processed_input)[0]
             prediction_lakhs = prediction / 100000
-            print(f"Prediction made: {prediction_lakhs} Lakhs")
+            print(f"Prediction made: {prediction_lakhs:.2f} Lakhs")
             
             return render_template('index.html', 
-                                prediction=f"₹{prediction_lakhs:,.2f} Lakhs",
-                                show_prediction=True)
+                                   prediction=f"₹{prediction_lakhs:,.2f} Lakhs",
+                                   show_prediction=True)
         
         except Exception as e:
             error_msg = f"Prediction error: {str(e)}"
             print(error_msg)
             return render_template('index.html', 
-                                error=error_msg,
-                                show_prediction=False)
+                                   error=error_msg,
+                                   show_prediction=False)
     
     return render_template('index.html', show_prediction=False)
 
