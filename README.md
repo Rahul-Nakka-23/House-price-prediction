@@ -54,7 +54,8 @@ pip install -r requirements.txt
 python app.py
 ```
 # 📱output 
-![image](https://github.com/user-attachments/assets/c567c650-73a0-46b4-aeed-40183b3a81d8)
+![image](https://github.com/user-attachments/assets/d045bbd1-88e8-480d-b110-164d3251a987)
+
 
 
 # 📌 Conclusion
