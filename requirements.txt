@@ -1,0 +1,12 @@
+Flask
+gunicorn
+numpy
+pandas
+scikit-learn
+joblib
+PyQRCode
+pypng
+python-dateutil
+pytz
+six
+tzdata
